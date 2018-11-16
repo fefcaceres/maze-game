@@ -15,8 +15,12 @@ This project was forked from (https://github.com/wwwtyro/Astray) in an effort to
 
 ### Launching
 
-1. Clone the repository into project folder or download zip and copy over the files into your project folder
-2. Navigate to the project directory in your terminal
-3. Type 'python -m SimpleHTTPServer' (or 'python3 -m http.server') to start server
-4. Open 'localhost:8000' in your browser
-5. Enjoy!
+Clone the repository into project folder or download zip and copy over the files into your project folder
+
+Navigate to the project directory in your terminal and type
+    python -m SimpleHTTPServer
+or
+    python3 -m http.server
+if running Python 3. Then open up your browser and navigate to
+    localhost:8000
+and enjoy!
