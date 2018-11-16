@@ -6,7 +6,8 @@ In the Silent Game, design is modeled as a social process of morphological chang
 
 This project was forked from (https://github.com/wwwtyro/Astray) in an effort to transform the game into a collaborative, multiplayer game for our final project in LMC 2700: Intro to Computational Media.
 
-Teammates:
+### Team
+
 - Fidel Flores Caceres - Craft Engineer
 - Savannah Joyner - Experience Architect
 - Sarah Tsai - Concept Builder
