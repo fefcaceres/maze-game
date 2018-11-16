@@ -15,22 +15,14 @@ This project was forked from (https://github.com/wwwtyro/Astray) in an effort to
 
 ### Launching
 
-Clone the repository into project folder or download zip and copy over the files into your project folder
+Clone the repository into project folder or download zip and copy over the files into your project folder. Navigate to the project directory in your terminal and type
 
-Navigate to the project directory in your terminal and type
-
-    ```python -m SimpleHTTPServer
-    ```
+    python -m SimpleHTTPServer
 
 or
 
-    ```python3 -m http.server
-    ```
+    python3 -m http.server
 
 if running Python 3
 
-Then open up your browser and navigate to
-    ```localhost:8000
-    ```
-    
-and enjoy!
+Then open up your browser and go to ```localhost:8000``` and enjoy the game!
