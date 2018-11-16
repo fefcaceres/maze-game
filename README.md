@@ -23,6 +23,4 @@ or
 
     python3 -m http.server
 
-if running Python 3
-
 Then open up your browser and go to ```localhost:8000``` and enjoy the game!
