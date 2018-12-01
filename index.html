@@ -57,7 +57,7 @@
                 var fixDef = new b2FixtureDef();
                 fixDef.density = 1.0;
                 fixDef.friction = 0.0;
-                fixDef.restitution = 0.25;
+                fixDef.restitution = 1.0;
                 fixDef.shape = new b2CircleShape(ballRadius);
                 wBall.CreateFixture(fixDef);
 
@@ -103,7 +103,7 @@
                 scene = new THREE.Scene();
 
                 // Add the light.
-                light= new THREE.PointLight(0xfff, 1);
+                light= new THREE.PointLight(0xfff, 5);
                 light.position.set(1, 1, 1.3);
                 scene.add(light);
 
@@ -125,7 +125,7 @@
                 scene.add(mazeMesh);
 
                 // Add the ground.
-                g = new THREE.PlaneGeometry(mazeDimension*10, mazeDimension*10, mazeDimension, mazeDimension);
+                g = new THREE.PlaneGeometry(mazeDimension*15, mazeDimension*15, mazeDimension, mazeDimension);
                 planeTexture.wrapS = planeTexture.wrapT = THREE.RepeatWrapping;
                 planeTexture.repeat.set(mazeDimension*5, mazeDimension*5);
                 m = new THREE.MeshPhongMaterial({map:planeTexture});
@@ -196,7 +196,7 @@
                         light.position.set(1, 1, 1.3);
                         light.intensity = 0;
                         var level = Math.floor((mazeDimension-1)/2 - 4);
-                        $('#level').html(' Level ' + level);
+                        $('#title').html(' Mercury Maze');
                         if (bestScore == Number.MAX_VALUE) {
                             $('#score').hide();
                         } else {
@@ -221,6 +221,11 @@
                         updatePhysicsWorld();
                         updateRenderWorld();
                         renderer.render(scene, camera);
+                          // if (wball.now() == mazeMesh.now()) {
+                          //   newlight= new THREE.PointLight(0xfff, 5);
+                          //   light.position.set(1, 1, 1.3);
+                          //   scene.add(newlight);
+                          // }
                         currentTime = Date.now();
                         $('#timer').html('Time: ' + Math.floor(((currentTime - startTime) / 1000)));
                         // Check for victory.
@@ -350,7 +355,7 @@
                 color: white;
             }
 
-            #level {
+            #title {
                 position: absolute;
                 left: 0px;
                 top: 0px;
@@ -365,7 +370,7 @@
                 top: 100px;
                 padding: 20px;
                 color: white;
-                font-weight: bold; 
+                font-weight: bold;
             }
             #timer {
                 position: absolute;
@@ -393,8 +398,8 @@
         Hold down the 'I' key for instructions.
     </div>
 
-    <div id='level'>
-        Level 1
+    <div id='title'>
+        Mercury Maze
     </div>
     <div id = 'timer'>
         Time
