@@ -29,6 +29,7 @@
                 gameState      = undefined,
                 startTime      = 0,
                 currentTime    = 0,
+                bestScore      = Number.MAX_VALUE,
             // Box2D shortcuts
                 b2World        = Box2D.Dynamics.b2World,
                 b2FixtureDef   = Box2D.Dynamics.b2FixtureDef,
@@ -194,10 +195,14 @@
                         camera.position.set(1, 1, 5);
                         light.position.set(1, 1, 1.3);
                         light.intensity = 0;
-                        startTime = Date.now();
-                        currentTime = Date.now();
                         var level = Math.floor((mazeDimension-1)/2 - 4);
                         $('#level').html(' Level ' + level);
+                        if (bestScore == Number.MAX_VALUE) {
+                            $('#score').hide();
+                        } else {
+                            $('#score').show()
+                            $('#score').html('Best Score: ' + bestScore);
+                        }
                         gameState = 'fade in';
                         break;
 
@@ -206,6 +211,8 @@
                         renderer.render(scene, camera);
                         if (Math.abs(light.intensity - 1.0) < 0.05) {
                             light.intensity = 1.0;
+                            startTime = Date.now();
+                            currentTime = Date.now();
                             gameState = 'play'
                         }
                         break;
@@ -215,12 +222,15 @@
                         updateRenderWorld();
                         renderer.render(scene, camera);
                         currentTime = Date.now();
-                        $('#timer').html('Time: ' + ((currentTime - startTime) / 1000));
+                        $('#timer').html('Time: ' + Math.floor(((currentTime - startTime) / 1000)));
                         // Check for victory.
                         var mazeX = Math.floor(ballMesh.position.x + 0.5);
                         var mazeY = Math.floor(ballMesh.position.y + 0.5);
                         if (mazeX == mazeDimension && mazeY == mazeDimension - 2) {
                             //mazeDimension += 2;
+                            if (Math.floor((currentTime - startTime) / 1000) < bestScore) {
+                                bestScore = Math.floor((currentTime - startTime) / 1000);
+                            }
                             light.intensity = 10
                             gameState = 'fade out';
                         }
@@ -234,7 +244,7 @@
                         if (Math.abs(light.intensity - 0.0) < 0.1) {
                             light.intensity = 0.0;
                             renderer.render(scene, camera);
-                            gameState = 'initialize'
+                            gameState = 'initialize';
                         }
                         break;
 
@@ -348,6 +358,15 @@
                 color: white;
                 font-weight: bold;
             }
+
+            #score {
+                position: absolute;
+                left: 0px;
+                top: 100px;
+                padding: 20px;
+                color: white;
+                font-weight: bold; 
+            }
             #timer {
                 position: absolute;
                 left: 0px;
@@ -363,11 +382,11 @@
     <body>
 
     <div id='instructions'>
-        How to play Astray:
+        How to Play Mercury Maze:
         <br><br>
         Use the arrow keys to move the ball and find the exit to the maze.
         <br><br>
-        Aslo available: w, a, s, d
+        Also available: w, a, s, d
     </div>
 
     <div id='help'>
@@ -379,6 +398,9 @@
     </div>
     <div id = 'timer'>
         Time
+    </div>
+    <div id = 'score'>
+        Score
     </div>
     </body>
 
