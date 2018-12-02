@@ -1,9 +1,7 @@
 <html>
 
-
-
 <audio autoplay loop>
-    <source src="audio/bgm.mp3">
+    <source src="/audio/bgm.mp3">
 </audio>
 
 <head>
@@ -305,7 +303,8 @@
                     keyAxis[i] = 0;
                 }
             }
-            console.log(keyAxis);
+            console.log("Left Inputs: " + leftInputs);
+
         }
 
         function onMoveKeyRight(axis) {
@@ -318,7 +317,7 @@
                     keyAxis[i] = 0;
                 }
             }
-            console.log(keyAxis);
+            console.log("Right Inputs: " + rightInputs);
         }
 
 
@@ -380,7 +379,7 @@
 
         document.addEventListener('keyup', (event) => {
             const keyName = event.key;
-            if (keyName == "w" || keyName == "s" || keyName == "i" || keyName == "k") {
+            if (keyName == "w" || keyName == "s" || keyName == "i" || keyName == "j") {
                 firstFrameKeyAxis[1] = 0;
             }
             if (keyName == "a" || keyName == "d" || keyName == "j" || keyName == "l") {
