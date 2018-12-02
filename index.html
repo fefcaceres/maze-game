@@ -1,4 +1,4 @@
-<html>
+<html >
 
     <head>
 
@@ -23,6 +23,8 @@
                 ballMesh       = undefined,
                 ballRadius     = 0.22,
                 keyAxis        = [0, 0],
+                firstFrameKeyAxis = [0, 0],
+                inputEnabled   = true,
                 ironTexture    = THREE.ImageUtils.loadTexture('/img/white.png'),
                 planeTexture   = THREE.ImageUtils.loadTexture('/img/white.png'),
                 brickTexture   = THREE.ImageUtils.loadTexture('/img/white.png'),
@@ -142,10 +144,13 @@
                 // Apply "friction".
                 var lv = wBall.GetLinearVelocity();
                 lv.Multiply(0.95);
+                if (lv < 1) {
+                    inputEnabled = true;
+                }
                 wBall.SetLinearVelocity(lv);
 
                 // Apply user-directed force.
-                var f = new b2Vec2(keyAxis[0]*wBall.GetMass()*0.25, keyAxis[1]*wBall.GetMass()*0.25);
+                var f = new b2Vec2(keyAxis[0]*wBall.GetMass()*5, keyAxis[1]*wBall.GetMass()*5);
                 wBall.ApplyImpulse(f, wBall.GetPosition());
                 keyAxis = [0,0];
 
@@ -268,7 +273,17 @@
 
 
             function onMoveKey(axis) {
-                keyAxis = axis.slice(0);
+                //axis.preventRepeat();
+                for (i = 0; i < axis.length; i++) {
+                    if (axis[i] != firstFrameKeyAxis[i]) {
+                        firstFrameKeyAxis[i] = axis[i];
+                        keyAxis[i] = axis[i];
+                    } else {
+                        keyAxis[i] = 0;
+                    }
+                }
+                console.log(axis);
+            
             }
 
 
@@ -302,7 +317,7 @@
                 // Prepare the instructions.
                 $('#instructions').center();
                 $('#instructions').hide();
-                KeyboardJS.bind.key('i', function(){$('#instructions').show()},
+                KeyboardJS.bind.key('t', function(){$('#instructions').show()},
                                          function(){$('#instructions').hide()});
 
                 // Create the renderer.
@@ -311,7 +326,7 @@
                 document.body.appendChild(renderer.domElement);
 
                 // Bind keyboard and resize events.
-                KeyboardJS.bind.axis('left', 'right', 'down', 'up', onMoveKey);
+                KeyboardJS.bind.axis('j', 'l', 'k', 'i', onMoveKey);
                 KeyboardJS.bind.axis('a', 'd', 's', 'w', onMoveKey);
                 $(window).resize(onResize);
 
@@ -324,7 +339,16 @@
 
             })
 
-
+            document.addEventListener('keyup', (event) => {
+                const keyName = event.key;
+                if (keyName == "w" || keyName == "s" || keyName == "i" || keyName == "j") {
+                    firstFrameKeyAxis[1] = 0;
+                }
+                if (keyName == "a" || keyName == "d" || keyName == "j" || keyName == "l") {
+                    firstFrameKeyAxis[0] = 0;
+                }
+                console.log('keypress event\n\n' + 'key: ' + keyName);
+            });
 
         </script>
 
@@ -385,7 +409,6 @@
     </head>
 
     <body>
-
     <div id='instructions'>
         How to Play Mercury Maze:
         <br><br>
@@ -395,7 +418,7 @@
     </div>
 
     <div id='help'>
-        Hold down the 'I' key for instructions.
+        Hold down the 't' key for instructions.
     </div>
 
     <div id='title'>
