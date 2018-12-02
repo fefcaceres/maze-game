@@ -24,7 +24,8 @@
                 ballRadius     = 0.22,
                 keyAxis        = [0, 0],
                 firstFrameKeyAxis = [0, 0],
-                inputEnabled   = true,
+                leftInputs     = 0,
+                rightInputs    = 0,
                 ironTexture    = THREE.ImageUtils.loadTexture('/img/white.png'),
                 planeTexture   = THREE.ImageUtils.loadTexture('/img/white.png'),
                 brickTexture   = THREE.ImageUtils.loadTexture('/img/white.png'),
@@ -150,7 +151,7 @@
                 wBall.SetLinearVelocity(lv);
 
                 // Apply user-directed force.
-                var f = new b2Vec2(keyAxis[0]*wBall.GetMass()*5, keyAxis[1]*wBall.GetMass()*5);
+                var f = new b2Vec2(keyAxis[0]*wBall.GetMass()*3, keyAxis[1]*wBall.GetMass()*3);
                 wBall.ApplyImpulse(f, wBall.GetPosition());
                 keyAxis = [0,0];
 
@@ -208,6 +209,8 @@
                             $('#score').show()
                             $('#score').html('Best Score: ' + bestScore);
                         }
+                        $('#percentages').html("Left Player: 0% Right Player: 0%");
+                        $('#timer').html("Loading...");
                         gameState = 'fade in';
                         break;
 
@@ -218,6 +221,8 @@
                             light.intensity = 1.0;
                             startTime = Date.now();
                             currentTime = Date.now();
+                            rightInputs = 0;
+                            leftInputs = 0;
                             gameState = 'play'
                         }
                         break;
@@ -233,13 +238,20 @@
                           // }
                         currentTime = Date.now();
                         $('#timer').html('Time: ' + Math.floor(((currentTime - startTime) / 1000)));
+                        var totalInputs = leftInputs + rightInputs;
+                        var leftPercentage = Math.round((leftInputs / totalInputs) * 100);
+                        var rightPercentage = Math.round((rightInputs / totalInputs) * 100);
+                        if (totalInputs != 0) {
+                            $('#percentages').html("Left Player: " + leftPercentage + "% Right Player: " + rightPercentage + "%");
+                        }
                         // Check for victory.
                         var mazeX = Math.floor(ballMesh.position.x + 0.5);
                         var mazeY = Math.floor(ballMesh.position.y + 0.5);
                         if (mazeX == mazeDimension && mazeY == mazeDimension - 2) {
                             //mazeDimension += 2;
-                            if (Math.floor((currentTime - startTime) / 1000) < bestScore) {
-                                bestScore = Math.floor((currentTime - startTime) / 1000);
+                            score = Math.floor((currentTime - startTime) / 1000) + Math.abs(rightPercentage - leftPercentage);
+                            if (score < bestScore) {
+                                bestScore = score;
                             }
                             light.intensity = 10
                             gameState = 'fade out';
@@ -272,18 +284,30 @@
             }
 
 
-            function onMoveKey(axis) {
-                //axis.preventRepeat();
+            function onMoveKeyLeft(axis) {
                 for (i = 0; i < axis.length; i++) {
                     if (axis[i] != firstFrameKeyAxis[i]) {
+                        leftInputs += 1;
                         firstFrameKeyAxis[i] = axis[i];
                         keyAxis[i] = axis[i];
                     } else {
                         keyAxis[i] = 0;
                     }
                 }
-                console.log(axis);
+                console.log("Left Inputs: " + leftInputs);
             
+            }
+            function onMoveKeyRight(axis) {
+                for (i = 0; i < axis.length; i++) {
+                    if (axis[i] != firstFrameKeyAxis[i]) {
+                        rightInputs += 1;
+                        firstFrameKeyAxis[i] = axis[i];
+                        keyAxis[i] = axis[i];
+                    } else {
+                        keyAxis[i] = 0;
+                    }
+                }
+                console.log("Right Inputs: " + rightInputs);
             }
 
 
@@ -326,8 +350,8 @@
                 document.body.appendChild(renderer.domElement);
 
                 // Bind keyboard and resize events.
-                KeyboardJS.bind.axis('j', 'l', 'k', 'i', onMoveKey);
-                KeyboardJS.bind.axis('a', 'd', 's', 'w', onMoveKey);
+                KeyboardJS.bind.axis('j', 'l', 'k', 'i', onMoveKeyRight);
+                KeyboardJS.bind.axis('a', 'd', 's', 'w', onMoveKeyLeft);
                 $(window).resize(onResize);
 
 
@@ -347,7 +371,7 @@
                 if (keyName == "a" || keyName == "d" || keyName == "j" || keyName == "l") {
                     firstFrameKeyAxis[0] = 0;
                 }
-                console.log('keypress event\n\n' + 'key: ' + keyName);
+                //console.log('keypress event\n\n' + 'key: ' + keyName);
             });
 
         </script>
@@ -387,11 +411,10 @@
                 color: white;
                 font-weight: bold;
             }
-
             #score {
                 position: absolute;
                 left: 0px;
-                top: 100px;
+                top: 110px;
                 padding: 20px;
                 color: white;
                 font-weight: bold;
@@ -404,6 +427,22 @@
                 color: white;
                 font-weight: bold;
             }
+            #participation {
+                position: absolute;
+                left: 0px;
+                top: 70px;
+                padding: 20px;
+                color: white;
+                font-weight: bold;               
+            }
+            #percentages {
+                position: absolute;
+                left: 0px;
+                top: 90px;
+                padding: 20px;
+                color: white;
+                font-weight: bold;               
+            }
         </style>
 
     </head>
@@ -412,9 +451,13 @@
     <div id='instructions'>
         How to Play Mercury Maze:
         <br><br>
-        Use the arrow keys to move the ball and find the exit to the maze.
+        Use the keys to move the ball and find the exit to the maze.
         <br><br>
-        Also available: w, a, s, d
+        If you're on the left, use the wasd keys. If you're on the right, use
+        the jkli keys.
+        <br><br>
+        Try to navigate to through the maze in the quickest amount of time,
+        and with both players giving equal amounts of input. The lower the score, the better.
     </div>
 
     <div id='help'>
@@ -425,7 +468,13 @@
         Mercury Maze
     </div>
     <div id = 'timer'>
-        Time
+        Loading...
+    </div>
+    <div id = 'participation'>
+        Participation:
+    </div>
+    <div id = 'percentages'>
+        Left Player: 0% Right Player: 0%
     </div>
     <div id = 'score'>
         Score
