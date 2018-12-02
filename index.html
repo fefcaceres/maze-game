@@ -305,8 +305,7 @@
                     keyAxis[i] = 0;
                 }
             }
-            console.log("Left Inputs: " + leftInputs);
-
+            console.log(keyAxis);
         }
 
         function onMoveKeyRight(axis) {
@@ -319,7 +318,7 @@
                     keyAxis[i] = 0;
                 }
             }
-            console.log("Right Inputs: " + rightInputs);
+            console.log(keyAxis);
         }
 
 
@@ -381,7 +380,7 @@
 
         document.addEventListener('keyup', (event) => {
             const keyName = event.key;
-            if (keyName == "w" || keyName == "s" || keyName == "i" || keyName == "j") {
+            if (keyName == "w" || keyName == "s" || keyName == "i" || keyName == "k") {
                 firstFrameKeyAxis[1] = 0;
             }
             if (keyName == "a" || keyName == "d" || keyName == "j" || keyName == "l") {
